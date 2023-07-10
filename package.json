@@ -12,8 +12,6 @@
 	},
 	"license": "ISC",
 	"devDependencies": {
-		"@commitlint/cli": "^17.6.6",
-		"@commitlint/config-conventional": "^17.6.6",
 		"@types/node": "^20.3.3",
 		"@types/uuid": "^9.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
@@ -35,7 +33,7 @@
 	},
 	"engines": {
 		"node": "^18.0.0",
-		"yarn": "^1.22.0",
-		"npm": "use yarn"
+		"npm": "use pnpm",
+		"yarn": "use pnpm"
 	}
 }
