@@ -19,6 +19,14 @@ interface _CheckerFactory {
 	checkAPIStatus(): void; // logs out the status of all the APIs running in the factory, (works only if lazy flag is true)
 }
 
+function validateURL(url: string | undefined) {
+	if (url && !validURL(url)) {
+		const errorObj: _ErrorObj[] = [];
+		errorBuilder(errorObj, "ERR_INVALID_URL", "invalid_url", url);
+		throw errorObj;
+	}
+}
+
 export default class CheckerFactory implements _CheckerFactory {
 	options: _CheckerFactoryOptions = { url: "", lazy: false, disable: false, log: true };
 
@@ -28,16 +36,13 @@ export default class CheckerFactory implements _CheckerFactory {
 		readonly library: SupportedLibraries,
 		options: _CheckerFactoryOptions,
 	) {
-		this.options = { ...options };
+		validateURL(options?.url);
+		this.options = { ...this.options, ...options };
 		this.library = library;
 	}
 
 	createChecker<T extends _CheckerType>(type: T, options?: APITypes[T]) {
-		if (options?.url && !validURL(options?.url)) {
-			const errorObj: _ErrorObj[] = [];
-			errorBuilder(errorObj, "ERR_INVALID_URL", "invalid_url", options.url);
-			throw errorObj;
-		}
+		validateURL(options?.url);
 		switch (type) {
 			case "REST": {
 				const { log, ...remainingOptions } = this.options;
