@@ -2,40 +2,50 @@ import CheckerREST from "@REST/checker.rest";
 import { _Checker } from "@REST/types.rest";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
-import { APITypes, SupportedLibraries, _CheckerType } from "./types";
-
-interface _CheckerFactoryOptions {
-	disable: boolean; // globally disables apis, if true
-	lazy: boolean; // runs all the apis when they are called, if true
-	log: boolean; // globally logs out all the apis, if true
-	url: string; // store global url
-}
+import {
+	APITypes,
+	SupportedLibraries,
+	_CheckerFactoryOptions,
+	_CheckerType,
+	_ErrorObj,
+} from "./types";
+import { errorBuilder, validURL } from "./utils";
 
 interface _CheckerFactory {
-	options: Partial<_CheckerFactoryOptions>;
-	storage: Record<string, _Checker>; // store for all the api data
+	options: _CheckerFactoryOptions;
+	storage: Record<string, _Checker<_CheckerType>>; // store for all the api data
 	readonly library: SupportedLibraries;
-	createChecker<T extends _CheckerType>(type: T, options: APITypes[T]): _Checker; // returns an instance of a checker
+	createChecker<T extends _CheckerType>(type: T, options: APITypes[T]): _Checker<T>; // returns an instance of a checker
 	checkAPIStatus(): void; // logs out the status of all the APIs running in the factory, (works only if lazy flag is true)
 }
 
 export default class CheckerFactory implements _CheckerFactory {
-	options: Partial<_CheckerFactoryOptions> = { url: "", lazy: false, disable: false, log: true };
+	options: _CheckerFactoryOptions = { url: "", lazy: false, disable: false, log: true };
 
-	storage: Record<string, _Checker> = {};
+	storage: Record<string, _Checker<_CheckerType>> = {};
 
 	constructor(
 		readonly library: SupportedLibraries,
-		options: Partial<_CheckerFactoryOptions>,
+		options: _CheckerFactoryOptions,
 	) {
 		this.options = { ...options };
 		this.library = library;
 	}
 
 	createChecker<T extends _CheckerType>(type: T, options?: APITypes[T]) {
+		if (options?.url && !validURL(options?.url)) {
+			const errorObj: _ErrorObj[] = [];
+			errorBuilder(errorObj, "ERR_INVALID_URL", "invalid_url", options.url);
+			throw errorObj;
+		}
 		switch (type) {
 			case "REST": {
-				const newChecker = new CheckerREST(this.library, { ...this.options, ...options });
+				const { log, ...remainingOptions } = this.options;
+				const newChecker = new CheckerREST(this.library, {
+					...remainingOptions,
+					...options,
+				});
+
 				this.storage[uuid()] = newChecker;
 				return newChecker;
 			}
@@ -48,7 +58,7 @@ export default class CheckerFactory implements _CheckerFactory {
 		const apis = Object.keys(this.storage).map(async (key) => {
 			const instance = this.storage[key];
 			const url = instance.options.url ?? this.options.url;
-			return this.storage[key].runChecker(axios, key, { url })({
+			return this.storage[key].run(axios, key, { url })({
 				baseURL: instance.options.url,
 				method: instance.options.method,
 				headers: instance.options.headers,

@@ -1,33 +1,32 @@
-import { HTTPMethods, SupportedLibraries, _ErrorObj, anyFn } from "../types";
+import { APITypes, HTTPMethods, SupportedLibraries, _ErrorObj, anyFn } from "../types";
 import { errorBuilder, validURL } from "../utils";
-import { _Checker, _RESTOptions } from "./types.rest";
+import { _Checker } from "./types.rest";
 
-export default class CheckerREST implements _Checker {
-	options: Partial<_RESTOptions> = {
+export default class CheckerREST implements _Checker<"REST"> {
+	options: APITypes["REST"] = {
 		url: "",
 		disable: false,
 		headers: {},
-		log: false,
 		method: HTTPMethods.GET,
 		showPerformance: null,
 	};
 
 	constructor(
 		readonly library: SupportedLibraries,
-		options: Partial<_RESTOptions>,
+		options: APITypes["REST"],
 	) {
 		this.library = library;
 		this.options = { ...this.options, ...options };
 	}
 
-	runChecker(instance: (...k: any) => any, tag: string, options?: Partial<_RESTOptions>): anyFn {
+	run(instance: (...k: any) => any, tag: string, options?: APITypes["REST"]): anyFn {
 		const errObj: _ErrorObj[] = [];
 		if (options) this.options = { ...options };
 		const url = this.options?.url as string;
 		return async (...args) => {
 			if (this.options.disable) return instance(...args);
 			if (!validURL(url)) {
-				errorBuilder(errObj, "ERR_INVALID", tag, url);
+				errorBuilder(errObj, "ERR_INVALID_URL", tag, url);
 				throw errObj;
 			}
 			try {
