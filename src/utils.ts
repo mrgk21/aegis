@@ -18,7 +18,7 @@ export function errorBuilder(
 	obj: _ErrorObj[],
 	errName: keyof typeof ERRORS,
 	tag: string,
-	url: string,
+	url?: string,
 ) {
-	obj.push(ERRORS[errName](tag, url));
+	obj.push(ERRORS[errName](tag, url ?? "NA"));
 }
