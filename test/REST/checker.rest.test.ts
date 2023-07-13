@@ -37,6 +37,7 @@ describe("Single instance", () => {
 					showPerformance: null,
 				});
 
+				expect(newChecker.options.url).toEqual("https://www.google.com");
 				expect(newChecker.options.disable).toBe(true);
 				expect(newChecker.options.method).toEqual(HTTPMethods.PATCH);
 				expect(newChecker.options.headers).toContain({ Authorization: "Bearer abcd" });
