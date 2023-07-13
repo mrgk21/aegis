@@ -19,10 +19,9 @@ export default class CheckerREST implements _Checker<"REST"> {
 		this.options = { ...this.options, ...options };
 	}
 
-	run(instance: (...k: any) => any, tag: string, options?: APITypes["REST"]): anyFn {
+	run(instance: (...k: any) => any, tag: string): anyFn {
 		const errObj: _ErrorObj[] = [];
-		if (options) this.options = { ...options };
-		const url = this.options?.url as string;
+		const { url } = this.options;
 		return async (...args) => {
 			if (this.options.disable) return instance(...args);
 			if (!validURL(url)) {
