@@ -9,9 +9,10 @@
 		"postlint:check": "prettier . --check",
 		"lint:fix": "prettier . --write",
 		"start:dev": "npx ts-node src/index.ts",
-		"test": "vitest",
-		"build": "tsc",
-		"test:coverage": "vitest dev --coverage  --reporter html"
+		"test": "vitest run",
+		"test:dev": "vitest",
+		"test:coverage": "vitest dev --coverage  --reporter html",
+		"build": "tsc"
 	},
 	"license": "ISC",
 	"devDependencies": {
