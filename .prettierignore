@@ -1,4 +1,6 @@
 node_modules
 dist
 tsconfig.json
-yarn.lock
+pnpm-lock.yaml
+coverage
+html

@@ -1,4 +1,4 @@
-import { HTTPMethods, SupportedLibraries, anyFn } from "../types";
+import { APITypes, HTTPMethods, SupportedLibraries, _CheckerType, anyFn } from "../types";
 
 export interface _CheckerPerformance {
 	disable: boolean;
@@ -8,21 +8,16 @@ export interface _CheckerPerformance {
 }
 
 export interface _RESTOptions {
-	url: string;
-	disable: boolean;
-	method: HTTPMethods;
-	headers: Record<string, string>;
-	showPerformance: _CheckerPerformance | null;
-	log: boolean;
+	url: string; // store local url (required)
+	disable: boolean; // disable local test (default: false)
+	method: HTTPMethods; // set method (default: GET)
+	headers: Record<string, string>; // http req headers
+	showPerformance: _CheckerPerformance | null; // show performance stats (default: false)
 }
 
-export interface _Checker {
-	runChecker(
-		instance: (...args: any) => Promise<object>,
-		tag: string,
-		options: Partial<_RESTOptions>,
-	): anyFn;
+export interface _Checker<T extends _CheckerType> {
+	run(instance: (...args: any) => Promise<object>, tag: string, options: APITypes[T]): anyFn;
 	library: SupportedLibraries;
-	options: Partial<_RESTOptions>;
+	options: APITypes[T];
 	// updateLibrary(lib: _SupportedLibraries): void;
 }

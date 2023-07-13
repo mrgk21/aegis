@@ -1,4 +1,4 @@
-import CheckerFactory from "./check.factory";
+import CheckerFactory from "./checker.factory";
 import { HTTPMethods, SupportedLibraries } from "./types";
 
 const url = "https://jsonplaceholder.typicode.com/poshhjts/1";
