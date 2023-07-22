@@ -7,12 +7,12 @@
 6. network monitor, to see api coverage
 
 
-coverage report
-show response data
-type safety
++ coverage report
++ show response data
++ type safety
 
-destroyChecker
-lazy loading of checker instances
++ destroyChecker
++ lazy loading of checker instances
 
-production ready
-bundle size smaller
++ production ready
++ bundle size smaller
