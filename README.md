@@ -5,4 +5,14 @@
 3. global log of all the things
 5. performance stats
 6. network monitor, to see api coverage
-    
+
+
+coverage report
+show response data
+type safety
+
+destroyChecker
+lazy loading of checker instances
+
+production ready
+bundle size smaller
