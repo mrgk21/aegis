@@ -15,7 +15,7 @@ export interface _ErrorObj {
 
 export interface _CheckerFactoryOptions {
 	disable?: boolean; // globally disables apis, if true
-	lazy?: boolean; // runs all the apis when they are called, if true
+	lazy?: boolean; // tbd
 	log?: boolean; // globally logs out all the apis, if true
 	url: string; // store global url
 }

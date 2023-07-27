@@ -1,7 +1,7 @@
-import CheckerREST from "@REST/checker.rest";
-import { _Checker } from "@REST/types.rest";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
+import CheckerREST from "./REST/checker.rest";
+import { _Checker } from "./REST/types.rest";
 import {
 	APITypes,
 	SupportedLibraries,
